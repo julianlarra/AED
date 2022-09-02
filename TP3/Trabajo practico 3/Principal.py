@@ -186,6 +186,26 @@ def resumen_por_anio(vec,proyectos_anios):
     proyectos_anios.clear()
 
 # Punto 6 ______________________________________________________________________________________________________________
+def filtrar_lenguaje(vec):
+    for i in range(len(vec) - 1):
+        for j in range(i + 1, len(vec)):
+            if vec[i].numero > vec[j].numero:
+                vec[i], vec[j] = vec[j], vec[i]
+
+
+def filtrar_lenguajebis(vec):
+    print('-Python-', '-Java-', '-C++-', '-Javascript-', '-Shell-', '-HTML-', '-Ruby-', '-Swift-', '-C#-', '-VB-',
+          '-Go-')
+    ln = str(input('Ingrese el lenguaje del cual quiere consultar los proyectos:'))
+    t = 1
+    for proyecto in vec:
+        if proyecto.lenguaje == ln:
+            if t == 1:
+                print('Los proyectos correspondientes al lenguaje ', proyecto.lenguaje, 'son: ')
+                t = 2
+            print(proyecto)
+        else:
+            return print('No se encontraron proyectos de ese lenguaje')
 
 
 ########################################################################################################################
