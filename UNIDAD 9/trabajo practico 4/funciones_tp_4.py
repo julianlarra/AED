@@ -4,18 +4,20 @@ import io
 import os.path
 import pickle
 import random
-from modulo_tp_4 import Proyecto
+from modulo_tp_4 import Proyecto, Matriz
+
+import datetime
 # mostrar menu
 ########################################################################################################################
 def mostrar_menu():
     print('{:^60}'.format('Menu de opciones'))
     print('\n\t1: Cargar el contenido del archivo en un vector.')
     print('\t2: Filtrar por tag.')
-    print('\t3:')
-    print('\t4:')
-    print('\t5:')
-    print('\t6:')
-    print('\t7:')
+    print('\t3: Determinar la cantidad de proyectos por cada lenguaje.')
+    print('\t4: Mostrar matriz ordenada por mes/estrella. buscar mes.')
+    print('\t5: Buscar por repositorio y actualizar Url.')
+    print('\t6: Guardar populares en archivo binario.')
+    print('\t7: Mostrar archivo binario.')
     print('\t8: Salir del programa.\n')
 
 #Punto 8
@@ -177,9 +179,10 @@ def guardar_archivo(obj,vacio):
         m = open('filtrotags.cvs', mode="wt", encoding="utf8")
         m.write('nombre_usuario|repositorio|fecha_actualizacion|lenguaje|estrellas|tags|url\n')
         m.close()
+
     #agregar al vector los registros filtrados
     m = open('filtrotags.cvs', mode="at", encoding="utf8")
-    m.write(obj.nombre_usuario+'|'+obj.repositorio+'|'+obj.fecha_actualizacion+'|'+obj.lenguaje+'|'+str(obj.likes)+'k'+'|'+str(obj.tags)+'|'+obj.url+'\n'    )
+    m.write(obj.nombre_usuario+'|'+obj.repositorio+'|'+obj.fecha_actualizacion+'|'+obj.lenguaje+'|'+str(obj.likes)+'k'+'|'+','.join(obj.tags)+'|'+obj.url+'\n'    )
     m.close()
 
 
@@ -220,7 +223,261 @@ def filtrar_tag(v1):
 
     #si el vector no fue creado notifica en pantalla
     if existe_vector(v1) == False:
-        print('El vector aun no fue creado.')
+        print('\n\tEl vector aun no fue creado.\n')
+
+
+# Punto3
+########################################################################################################################
+
+
+
+
+def ordenar_lenguaje(v1):
+
+
+  #comprobar que el vector este generado
+
+  if not existe_vector(v1):
+      print('\n\tEl vector aun no fue creado.\n')
+  lenguajes = []
+  #recorrer el vector en busca de los lenguajes y los deja en un vector agrupado por lenguajes
+  for obj in v1:
+      leng=obj.lenguaje
+
+      n = len(lenguajes)
+      pos = n
+      izq, der = 0, n-1
+      while izq <= der:
+          c = (izq + der) // 2
+          if lenguajes[c] == leng:
+              pos = c
+              break
+          if leng < lenguajes[c]:
+             der = c - 1
+          else:
+             izq = c + 1
+          if izq > der:
+             pos = izq
+      lenguajes[pos:pos] = [leng]
+
+
+  cant_len = None
+
+  #recorre el vector y se detiene en cada lenguaje
+  #for l in range(len(lenguajes)):
+
+      #posicion
+  pos = 0
+      #si la matriz esta vacia carga el primer elemento
+  if cant_len == None:
+     cant_len =[]
+  sig = pos+1
+      #contador de repeticiones iniciado en 1
+
+  while sig < len(lenguajes):
+          counter = 1
+          #print(pos, sig)
+          while lenguajes[pos] == lenguajes[sig] :
+              counter +=1
+              pos +=1
+              sig = pos+1
+              if sig == len(lenguajes):
+                  break
+          cant_len.append([lenguajes[pos],counter])
+          #print(cant_len)
+          #print('pos',pos,sig)
+          pos +=1
+          sig =pos+1
+  #print(cant_len)
+
+
+  #ordena y mostrar ordenado
+
+
+  for i in range(len(cant_len)-1):
+      for j in range(i+1,len(cant_len)):
+          if cant_len[i][1] < cant_len[j][1]:
+                cant_len[i],cant_len[j] = cant_len[j],cant_len[i]
+
+  if existe_vector(v1):
+  #mostrar uno por renglon
+      print('\n|\tLenguaje      Cantidad|\n')
+      for i in cant_len:
+          lengu = i[0]
+          cantidad = i[1]
+
+          print('|''{:<20}'.format(lengu)+'{:<5}'.format(cantidad)+'|')
+
+
+
+
+#Punto 4
+########################################################################################################################
+
+
+def meses(obj,v1):
+    fecha= obj.fecha_actualizacion.split('-')
+    mes = int(fecha[1])
+    return mes
+
+def popularidad_mes(v1):
+   existe=False
+   #verificar si se creo el vector
+   if  existe_vector(v1):
+       existe = True
+
+
+       #definir matriz filas mes del 1 al 12,
+       popular = [[0]*5 for e in range(12)]
+
+       #referencia primer casillero[x] llama fila mes 0 = mes 1 = enero al 11 = 12 = diciembre
+       #segundo casillero [y] llama estrellas [0] = 1 estrella al [4] = 5 estrellas.
+       #print(popular)
+       #print(popular[1])
+
+       #recorrer el vector y completar la matris
+       for obj in v1:
+           #extrae el mes de cada registro del descuenta 1  y lo disponibiliza como int para buscar por fila  en la matriz
+           mes= meses(obj,v1)-1
+
+           #filtramos los likes convertimos a estrellas reutilizando la funcion cant_estrellas()
+           # descontamos uno para buscar en el indice de la matriz
+
+           estrellas = cantidad_estrellas(obj)-1
+           #print(estrellas)
+
+           #contabilizamos las coincidencias para cada mes segun las estrellas
+           popular[mes][estrellas]+=1
+
+       #mostrae matriz como tabla
+       print('\n\t Tabla de meses y estrellas, con cantidad de proyectos.')
+       primer_vuelta = True
+       for i in range(len(popular)):
+           if  primer_vuelta:
+               print('\n|{:^6}'.format('MES')+'|{:^13}'.format('1 ESTRELLA')+'|{:^13}'.format('2 ESTRELLAS')+'|{:^13}'.format('3 ESTRELLAS')+'|{:^13}'.format('4 ESTRELLAS')+'|{:^13}|'.format('5 ESTRELLAS'))
+               primer_vuelta = False
+           print('|{:^6}'.format(i+1)+'|{:^13}'.format(popular[i][0])+'|{:^13}'.format(popular[i][1])+'|{:^13}'.format(popular[i][2])+'|{:^13}'.format(popular[i][3])+'|{:^13}|'.format(popular[i][4]))
+
+
+        #calcular sumatoria de proyectos por mes
+       consulta= input('\n\tPara consultar el total de proyectos de un mes ingrese "S" \n\t o ingrese "N" para salir.\n\tInsert:').lower()
+
+       while consulta != 'n':
+         if consulta == 's':
+             sumar_mes= input('\nIngrese el numero: \n\t1  = Enero \n\t2  = febrero \n\t3  = febrero\n\t4  = Marzo \n\t5  = Abril'
+                              ' \n\t6  = Junio \n\t7  = Julio \n\t8  = Agosto \n\t9  = Septiembre \n\t10 = Octubre \n\t11 = Noviembre \n\t12 = Diciembre \n\t Numero:    ')
+
+             #recoremos la fila y sumamos
+             sumatoria = 0
+             sumar_mes = int(sumar_mes)-1 #adaptamos al indice
+             for m in range(5):
+                 sumatoria += popular[sumar_mes][m]
+
+             print('En el mes '+str(sumar_mes+1)+', se actualizaron '+str(sumatoria)+' proyectos.')
+
+         consulta= input('\n\t Para realizar otra consulta\n\t Si = "S" / No = "N" \n\t Insert: ').lower()
+
+   if existe == False:
+      print('\n\tEl vector aun no fue creado.\n')
+
+   else:
+         return popular
+#Punto 5
+########################################################################################################################
+
+
+
+def buscar_repo(v1):
+
+  #verificar si se genero el vectos
+   existe=False
+
+   if  existe_vector(v1):
+       existe = True
+
+       encontrado = False
+       rep= input('\n\t Ingrese el repositorio que desea actualizar\n\t Rep: ')
+       for r in v1:
+
+          if rep == r.repositorio:
+              encontrado = True
+              print('\n\tSe muestran los datos del repositorio buscado:\n ')
+              print(r.to_string())
+              r.url = input('\n\tIngrese el nuevo Url: ')
+              r.fecha_actualizacion = datetime.datetime.now().strftime('%Y-%m-%d')
+              print('\n\tRegistro modificado con exito.\n')
+              print(r.to_string())
+              break
+       if encontrado == False:
+           print('\n\tLa busqueda no produjo coincidencias.')
+   if not existe:
+       print('\n\tEl vector aun no fue creado.\n')
+
+#Punto 6
+########################################################################################################################
+
+def guardar_populares(mas_popular,v1,fd2,v2):
+     #verificar si se genero el vectos
+   existe=False
+
+   if  existe_vector(v1):
+       existe = True
+
+
+       if mas_popular != None:
+
+           #recorrer la matriz
+           for fila in range(len(mas_popular)):
+               for columna in range(len(mas_popular[fila])):
+                   if mas_popular[fila][columna] > 0:
+                       mes      = fila
+                       estrella = columna
+                       cantidad = mas_popular[fila][columna]
+                       matriz = Matriz(mes,estrella,cantidad)
+                       v2.append(matriz)
+
+       m= open(fd2,'wb')
+       for dat in v2:
+             pickle.dump(dat,m)
+
+       m.close()
+       print('\n\tArchivo guardado.')
+   if not existe:
+       print('\n\tEl vector aun no fue creado.\n')
+
+
+#Punto 7
+########################################################################################################################
+
+def mostrar_archivo(fd2):
+    #crear matriz plantilla
+    popular = [[0]*5 for e in range(12)]
+    #comprobar que el archivo existe
+    if not os.path.exists(fd2):
+        print('\n\tEl archivo ',fd2,' no existe.\n')
+        return
+
+    #abrir y manejar el archivo
+    m= open(fd2,'rb')
+
+    t= os.path.getsize(fd2)
+    while m.tell() < t:
+        dat = pickle.load(m) #extraer los datos
+        popular[dat.mes][dat.estrella] = dat.cantidad
+       # print(dat.mes,dat.estrella,dat.cantidad)
+
+    m.close()
+
+    #mostrar matriz como tabla
+    print('\n\t Tabla de meses y estrellas, con cantidad de proyectos.')
+    primer_vuelta = True
+    for i in range(len(popular)):
+           if  primer_vuelta:
+               print('\n|{:^6}'.format('MES')+'|{:^13}'.format('1 ESTRELLA')+'|{:^13}'.format('2 ESTRELLAS')+'|{:^13}'.format('3 ESTRELLAS')+'|{:^13}'.format('4 ESTRELLAS')+'|{:^13}|'.format('5 ESTRELLAS'))
+               primer_vuelta = False
+           print('|{:^6}'.format(i+1)+'|{:^13}'.format(popular[i][0])+'|{:^13}'.format(popular[i][1])+'|{:^13}'.format(popular[i][2])+'|{:^13}'.format(popular[i][3])+'|{:^13}|'.format(popular[i][4]))
+
+
 
 
 #prueba
