@@ -25,7 +25,7 @@ def principal():
     while op != 8:
         mostrar_menu()
         print('-'*60)
-        op = int(input(' Ingrese la opcion deseada: '))
+        op = int(input(' Ingrese la opción deseada: '))
         print('-'*60)
         #print('|\/'*20)
         #print()
