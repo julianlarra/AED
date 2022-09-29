@@ -28,3 +28,18 @@ class Proyecto():
 
 
 
+#definir funcion  para el punto 6
+
+class Matriz():
+
+    def __init__(self,mes,estrella,cantidad):
+
+
+        self.mes      = mes
+        self.estrella = estrella
+        self.cantidad = cantidad
+
+    def __str__(self):
+        r= ' Mes: '+str(self.mes)+ ' Estrella: '+str(self.estrella)+ ' Cantidad: ' +str(self.cantidad)
+
+        return r
