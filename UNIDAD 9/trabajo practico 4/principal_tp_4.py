@@ -12,7 +12,9 @@ def principal():
 
     fd = 'libros.csv'
     v1 = []
-
+    fd2= 'popular.dat'
+    mas_popular = None
+    v2 = []
     #menu
     op = 0
     print('|\/'*20)
@@ -38,19 +40,23 @@ def principal():
             #print("Filtrando por tag")
             filtrar_tag(v1)
         elif op == 3:
-            pass
+            # Mostrar l ordenado por lenguaje de mayor a menor
+            ordenar_lenguaje(v1)
 
         elif op == 4:
-            pass
+             mas_popular=popularidad_mes(v1)
 
         elif op == 5:
-            pass
+             buscar_repo(v1)
 
         elif op == 6:
-            pass
+
+            if mas_popular == None:
+                print('\n\tDebe generar la matriz en el punto 4.')
+            guardar_populares(mas_popular,v1,fd2,v2)
 
         elif op == 7:
-            pass
+            mostrar_archivo(fd2)
 
         elif op == 8:
             finalizar()
