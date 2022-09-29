@@ -10,7 +10,7 @@ import datetime
 # mostrar menu
 ########################################################################################################################
 def mostrar_menu():
-    print('{:^60}'.format('Menu de opciones'))
+    print('{:^60}'.format('Menú de opciones'))
     print('\n\t1: Cargar el contenido del archivo en un vector.')
     print('\t2: Filtrar por tag.')
     print('\t3: Determinar la cantidad de proyectos por cada lenguaje.')
@@ -47,16 +47,8 @@ def crear_registro(pipe,v,cont_rep):
 
     proyecto = Proyecto(nombre_usuario,repositorio,fecha_actualizacion,lenguaje,likes,tags,url)
 
-    #prueba de ordenamiento secuencial
-    '''
-    n = len(v)
-    pos = n
-    for i in range(n):
-        if proyecto.repositorio < v[i].repositorio:
-           pos = i
-           break
-    v[pos:pos] = [proyecto]
-'''
+
+
     #prueba de ordenamiento binaria
 
     repetida = False
@@ -133,8 +125,8 @@ def crear_vector(v1,fd):
     #mostrar la cantidad de registros que se cargaron
     print('Se cargaron '+str(len(v))+' registros en el vector.')
     #mostrar cantidad de registros omitidos
-    print('Se omitieron de la carga '+ str(omitidos+cont_rep)+' lineas:')
-    print('\t'+str(omitidos)+ ' por tener el campo Lenguaje vacio.')
+    print('Se omitieron de la carga '+ str(omitidos+cont_rep)+' líneas:')
+    print('\t'+str(omitidos)+ ' por tener el campo Lenguaje vacío.')
     print('\t'+str(cont_rep) +' por tener el campo Repositorio repetido.\n')
     print('|\/'*20)
     print()
@@ -223,7 +215,7 @@ def filtrar_tag(v1):
 
     #si el vector no fue creado notifica en pantalla
     if existe_vector(v1) == False:
-        print('\n\tEl vector aun no fue creado.\n')
+        print('\n\tEl vector aún no ha sido creado.\n')
 
 
 # Punto3
@@ -238,7 +230,7 @@ def ordenar_lenguaje(v1):
   #comprobar que el vector este generado
 
   if not existe_vector(v1):
-      print('\n\tEl vector aun no fue creado.\n')
+      print('\n\tEl vector aún no ha sido creado.\n')
   lenguajes = []
   #recorrer el vector en busca de los lenguajes y los deja en un vector agrupado por lenguajes
   for obj in v1:
@@ -364,7 +356,7 @@ def popularidad_mes(v1):
 
        while consulta != 'n':
          if consulta == 's':
-             sumar_mes= input('\nIngrese el numero: \n\t1  = Enero \n\t2  = febrero \n\t3  = febrero\n\t4  = Marzo \n\t5  = Abril'
+             sumar_mes= input('\nIngrese el número: \n\t1  = Enero \n\t2  = febrero \n\t3  = febrero\n\t4  = Marzo \n\t5  = Abril'
                               ' \n\t6  = Junio \n\t7  = Julio \n\t8  = Agosto \n\t9  = Septiembre \n\t10 = Octubre \n\t11 = Noviembre \n\t12 = Diciembre \n\t Numero:    ')
 
              #recoremos la fila y sumamos
@@ -378,7 +370,7 @@ def popularidad_mes(v1):
          consulta= input('\n\t Para realizar otra consulta\n\t Si = "S" / No = "N" \n\t Insert: ').lower()
 
    if existe == False:
-      print('\n\tEl vector aun no fue creado.\n')
+      print('\n\tEl vector aún no ha sido creado.\n')
 
    else:
          return popular
@@ -405,13 +397,13 @@ def buscar_repo(v1):
               print(r.to_string())
               r.url = input('\n\tIngrese el nuevo Url: ')
               r.fecha_actualizacion = datetime.datetime.now().strftime('%Y-%m-%d')
-              print('\n\tRegistro modificado con exito.\n')
+              print('\n\tRegistro modificado con éxito.\n')
               print(r.to_string())
               break
        if encontrado == False:
-           print('\n\tLa busqueda no produjo coincidencias.')
+           print('\n\tLa búsqueda no produjo coincidencias.')
    if not existe:
-       print('\n\tEl vector aun no fue creado.\n')
+       print('\n\tEl vector aún no ha sido creado.\n')
 
 #Punto 6
 ########################################################################################################################
@@ -443,7 +435,7 @@ def guardar_populares(mas_popular,v1,fd2,v2):
        m.close()
        print('\n\tArchivo guardado.')
    if not existe:
-       print('\n\tEl vector aun no fue creado.\n')
+       print('\n\tEl vector aún no ha sido creado.\n')
 
 
 #Punto 7
@@ -480,12 +472,6 @@ def mostrar_archivo(fd2):
 
 
 
-#prueba
-'''
-def mostrar_vector(v1):
-   for i in v1:
-        print(i.to_string())
-'''
 
 
 
